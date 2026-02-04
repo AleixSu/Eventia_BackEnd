@@ -9,12 +9,14 @@ const {
   signUpToEvent,
   getEventByLocation,
   cancelEventSignUp,
-  getEventByName
+  getEventByName,
+  getNameEvents
 } = require('../controllers/event')
 
 const eventRoutes = require('express').Router()
 
 eventRoutes.get('/', getEvents)
+eventRoutes.get('/getNameEvents', getNameEvents)
 eventRoutes.get('/location/:locations', getEventByLocation)
 eventRoutes.get('/:id', getEventByID)
 eventRoutes.post('/getEventByName', isAuth, allowRoles('admin'), getEventByName)

@@ -21,6 +21,21 @@ const getEvents = async (req, res, next) => {
   }
 }
 
+const getNameEvents = async (req, res, next) => {
+  try {
+    const nameEvents = await Event.find().select('eventName _id')
+
+    if (nameEvents.length === 0) {
+      return res.status(404).json("There's no events to be found")
+    } else {
+      return res.status(200).json(nameEvents)
+    }
+  } catch (error) {
+    console.log(error)
+    return errorHandler(res, error, 500, 'get the data')
+  }
+}
+
 const getEventByID = async (req, res, next) => {
   try {
     const { id } = req.params
@@ -298,6 +313,7 @@ const deleteEvent = async (req, res, next) => {
 
 module.exports = {
   getEvents,
+  getNameEvents,
   getEventByID,
   getEventByLocation,
   getEventByName,
