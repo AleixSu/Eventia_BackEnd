@@ -3,11 +3,10 @@ const { verifyJWT } = require('../../utils/token/jwt')
 
 const isAuth = async (req, res, next) => {
   try {
-    const token = req.headers.authorization
+    const token = req.cookies.token
     if (!token) throw new Error('No token provided')
 
-    const parsedToken = token.replace('Bearer ', '')
-    const { id } = verifyJWT(parsedToken)
+    const { id } = verifyJWT(token)
 
     let user = await User.findById(id)
     if (!user) {

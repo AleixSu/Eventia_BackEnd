@@ -1,6 +1,6 @@
 const deleteFile = require('../../utils/functions/deleteFile')
 const errorHandler = require('../../utils/functions/errorHandler')
-const { generateSign } = require('../../utils/token/jwt')
+const { generateJWT } = require('../../utils/token/jwt')
 const Event = require('../models/event')
 const User = require('../models/user')
 const bcrypt = require('bcrypt')
@@ -58,9 +58,18 @@ const login = async (req, res, next) => {
     )
     if (user) {
       if (bcrypt.compareSync(req.body.password, user.password)) {
-        const token = generateSign(user._id)
+        const token = generateJWT(user._id)
+
+        const isProduction = process.env.NODE_ENV === 'production'
+
+        res.cookie('token', token, {
+          httpOnly: true,
+          secure: isProduction,
+          sameSite: isProduction ? 'none' : 'lax',
+          maxAge: 24 * 60 * 60 * 1000
+        })
         const { password, ...safeUser } = user.toObject() // extraemos el password guardando el resto en safeUser para luego al retornar que no devuelva el password.
-        return res.status(200).json({ user: safeUser, token })
+        return res.status(200).json({ user: safeUser })
       } else {
         if (req.file?.path) await deleteFile(req.file.path)
         return res.status(401).json('User or password incorrect')
@@ -74,6 +83,12 @@ const login = async (req, res, next) => {
     if (req.file?.path) await deleteFile(req.file.path)
     return errorHandler(res, error, 500, 'log in')
   }
+}
+
+const logout = (req, res, next) => {
+  res.clearCookie('token')
+
+  return res.status(200).json({ message: 'Logged out' })
 }
 
 const getProfile = async (req, res) => {
@@ -283,6 +298,7 @@ const deleteUser = async (req, res, next) => {
 
 module.exports = {
   login,
+  logout,
   register,
   getProfile,
   getUsers,

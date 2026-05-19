@@ -9,12 +9,14 @@ const {
   deleteUser,
   getProfile,
   getUserByEmail,
-  getUsersByNameOrNickname
+  getUsersByNameOrNickname,
+  logout
 } = require('../controllers/user')
 
 const userRoutes = require('express').Router()
 
 userRoutes.post('/login', login)
+userRoutes.post('/logout', logout)
 userRoutes.post('/register', upload.single('profileImg'), register)
 userRoutes.get('/profile', isAuth, getProfile)
 userRoutes.get('/', getUsers)
