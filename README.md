@@ -8,7 +8,7 @@ Permite creación, lectura, actualización y eliminación de datos, manejo de im
 
 ## Aplicación desplegada
 
-Frontend (Vercel): https://project13-final-project-front-end.vercel.app/
+Frontend (Vercel): https://eventiafest.vercel.app/
 
 
 Repositorio Frontend:
