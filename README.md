@@ -103,15 +103,18 @@ Este proceso permite inicializar completamente la base de datos con datos realis
 
 **Base:** `/api/v1/users`
 
-| Método | Endpoint    | Descripción                                                | Acceso            |
-| ------ | ----------- | ---------------------------------------------------------- | ----------------- |
-| POST   | `/login`    | Inicia sesión y devuelve token JWT                         | Libre             |
-| POST   | `/register` | Registra usuario con imagen opcional                       | Libre             |
-| GET    | `/profile`  | Devuelve datos del usuario autenticado (populate avanzado) | Autenticado       |
-| GET    | `/`         | Obtiene todos los usuarios                                 | Libre             |
-| GET    | `/:id`      | Obtiene usuario por ID                                     | Libre             |
-| PATCH  | `/:id`      | Actualiza usuario (propietario o admin)                    | Propietario/Admin |
-| DELETE | `/:id`      | Elimina usuario (propietario o admin)                      | Propietario/Admin |
+| Método  | Endpoint                      | Descripción                                                | Acceso            |
+| ------- | ----------------------------- | ---------------------------------------------------------- | ----------------- |
+| POST    | `/login`                      | Inicia sesión y guarda JWT en cookie httpOnly              | Libre             |
+| POST    | `/logout`                     | Cierra sesión y elimina la cookie JWT                      | Autenticado       |
+| POST    | `/register`                   | Registra usuario con imagen opcional                       | Libre             |
+| GET     | `/profile`                    | Devuelve datos del usuario autenticado (populate avanzado) | Autenticado       |
+| GET     | `/`                           | Obtiene todos los usuarios                                 | Libre             |
+| GET     | `/:id`                        | Obtiene usuario por ID                                     | Libre             |
+| PATCH   | `/:id`                        | Actualiza usuario (propietario o admin)                    | Propietario/Admin |
+| DELETE  | `/:id`                        | Elimina usuario (propietario o admin)                      | Propietario/Admin |
+| POST    | `/getUserByEmail`             | Busca usuario por email y nickName                         | Admin             |
+| POST    | `/getUsersByNameOrNickname`   | Busca asistentes de un evento por nombre o nickName        | Autenticado       |
 
 **Ejemplo de body para registro:**
 
@@ -184,11 +187,16 @@ Este proceso permite inicializar completamente la base de datos con datos realis
 - **user** → Operaciones sobre su propio perfil, asistir o cancelar asistencia a eventos
 - **admin** → CRUD completo de eventos y localizaciones, puede editar y eliminar usuarios
 
-Los tokens JWT se envían mediante header:
+La autenticación se gestiona mediante cookies `httpOnly` con JWT.
 
-```
-Authorization: Bearer <token>
-```
+### Seguridad implementada
+
+- JWT almacenado en cookies `httpOnly`
+- Protección frente a acceso desde JavaScript
+- `sameSite` configurado según entorno
+- `secure: true` en producción
+- Persistencia automática de sesión mediante cookies
+- Uso de `credentials: 'include'` en frontend para peticiones autenticadas
 
 ---
 
