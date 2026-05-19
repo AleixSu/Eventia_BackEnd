@@ -12,8 +12,7 @@ Frontend (Vercel): https://eventiafest.vercel.app/
 
 
 Repositorio Frontend:
-[https://github.com/AleixSu/Project13.Final_Project_FontEnd
-](https://github.com/AleixSu/Project13.Final_Project_FrontEnd)
+https://github.com/AleixSu/Eventia_FrontEnd
 
 Backend desplegado (Render):
 https://eventhub-backend-7hna.onrender.com
